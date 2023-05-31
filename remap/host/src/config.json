@@ -1,0 +1,49 @@
+{
+  "cameras": [
+    {
+      "if" : "usb",
+      "driver": "opencv",
+      "camera_id": 0,
+
+      "name" : "See3CAM_CU30_CHL_TC_BX",
+      "MP" : 3.4,
+      "height" : 1536,
+      "width" : 2304,
+      "FPS": 60,
+      "FOV": "FOV: 118°(D), 96°(H), 63.5°(V) (with the lens provided by e-con)",
+
+      "channels" : 3,
+      "channel_depth" : 8
+    },
+    {
+      "if": "usb",
+      "driver": "opencv",
+      "camera_id": 1,
+
+      "name" : "See3CAM_CU30_CHL_TC_BX",
+      "MP" : 3.4,
+      "height" : 1536,
+      "width" : 2304,
+      "FPS": 60,
+      "FOV": "FOV: 118°(D), 96°(H), 63.5°(V) (with the lens provided by e-con)",
+
+      "channels" : 3,
+      "channel_depth" : 8
+    },
+    {
+      "if": "GigEVision",
+      "driver" : "spinnaker",
+
+      "name" : "BlackFly BLFY-PGE-50A2M",
+      "MP" : 3.4,
+      "type" : "USB",
+      "camera_id": 0,
+      "height" : 1944,
+      "width" : "2592",
+      "FPS" : 13,
+
+      "channels" : 1,
+      "channel_depth" : 12
+    }
+  ]
+}

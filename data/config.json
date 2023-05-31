@@ -1,0 +1,113 @@
+{
+    "mode" : 0
+
+    ,"img_files" : [
+        {
+        "name" : "sgs_linus",
+        "path": "data/sgs_2592x1944x8x1.png",
+        "height" : 1944,
+        "width" : 2592,
+        "channels" : 1,
+        "pixel_format" : 8
+        }
+        ,{
+        "name" : "flir_xcu102",
+        "path": "data/flir-2592x1944x16x1.png",
+        "height" : 1944,
+        "width" : 2592,
+        "channels" : 1,
+        "pixel_format" : 16
+        }
+        ,{
+        "name" : "linuss0",
+        "path": "data/lin0-2592x1944x16x1.tif",
+        "height" : 1944,
+        "width" : 2592,
+        "channels" : 1,
+        "pixel_format" : 16
+        }
+        ,{
+        "name" : "linuss1",
+        "path": "data/lin1-2592x1944x16x1.tif",
+        "height" : 1944,
+        "width" : 2592,
+        "channels" : 1,
+        "pixel_format" : 16
+        }
+          ,{
+        "name" : "ori",
+        "path": "data/ori-1920x1080x8x3.jpg",
+        "height" : 1080,
+        "width" : 1920,
+        "channels" : 3,
+        "pixel_format" : 8
+        }      
+
+    ],
+
+    "remap" :{
+        "chennels":1,
+        "pixel_format" : 16,
+        "height" : 1944,
+        "width":2592
+    },
+
+    "camera" : [
+        {
+        "I":"GIGE",
+        "height" : 1944,
+        "width" : 2592,
+        "channels": 1,
+        "pixel_format" : 16,
+        "capture_number" : 10,
+        "loop_delay_ms" : 2000
+        }
+        ,
+        {
+        "I":"USB",
+        "camera_id" : 0,
+        "name" :"See3Cam_CU30_CLH_TC",
+        "height" : 1944,
+        "width" : 2592,
+        "channels": 1,
+        "pixel_format" : 16,
+        "capture_number" : 10,
+        "loop_delay_ms" : 0
+        }
+        ,
+        {
+        "I":"USB",
+        "camera_id" : 1,
+        "name" :"See3Cam_CU30_CLH_Tx",
+        "height" : 1944,
+        "width" : 2592,
+        "channels": 1,
+        "pixel_format" : 16,
+        "capture_number" : 10,
+        "loop_delay_ms" : 0
+        }
+    ]
+    ,
+
+    "SGS" : {
+        "host":"gerolamo.ast.lmco.com",
+        "port" : 2121
+    },
+
+    "image_server" : [
+        {
+            "name" : "blackfly_camera_raw",
+            "port" : 8080
+        },
+        {
+            "name":"usb",
+            "port":8010
+        },
+        {
+            "name":"remap",
+            "port":8020
+        }
+    ]
+
+
+}

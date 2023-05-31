@@ -1,0 +1,80 @@
+{
+    "options": {
+        "type": "options",
+        "background_color": [0.0, 0.0, 0.0, 0.0],
+        "output_folder": "output/",
+        "output_format": "png",
+        "normalize_output": false
+    },
+    "ISS": {
+        "type": "model",
+        "filename": "/data/ams_cv/gncoptix/models/ISS.glb",
+        "t_matrix": [  0.5993012, -0.0782565, -0.7966894,0,
+        0.4927725,  0.8203764,  0.2900997,0,
+        0.6308830, -0.5664437,  0.5302152 ,0,
+        0,0,0,1
+     ]
+    },
+    "earth": {
+        "type": "model",
+        "filename": "/data/ams_cv/gncoptix/models/Earth_corrected.glb",
+        "t_matrix": [1,0,0,0,
+                    0,1,0,0,
+                    0,0,1,2e6,
+                    0,0,0,1]
+    },
+    "wfov": {
+        "type": "camera",
+        "camera_type": "grayscale", //color, grayscale, infrared
+        "enabled": true,        
+        "image_height": 1080,       //in pixels
+        "image_width": 1920,        //in pixels
+        "focal_length": 0.02,       //in meters
+        "aperture": 0.005,           //in meters
+        "exposure_time": 250e-6,    //in seconds
+        "pixel_pitch": 2.2e-6,      //in meters
+        "well_depth": 6667,         //[e-]
+        "system_gain": 0.035,   //[DN/e-] if you have a 1/K gain [e-/DN] then you need to put the inverse. Make sure that (well_depth*system_gain) is close to the max value that can be represented by the definied bits
+        "quantum_efficiency": [0.51, 0.64, 0.58, 0.28, 0.16], //bands R(600-700nm), G(500-600nm), B(400-500nm), UV(300-400nm), NIR(700-1100nm)
+        "bits": 8,
+        "user_gain": 1,
+        "oversampling": 1,
+        "undistortion_k": [-0.87660, 0.79050, -0.47030],
+        "undistortion_p": [0.001152, 0.001223],
+        "distortion_k": [1.03066609, -1.23938090, 15.7324080],
+        "distortion_p": [-0.0032, -0.0034],
+        "t_matrix": [-1,0,0,0,
+                        0,-1,0,-0.5,
+                        0,0,1,500,
+                        0,0,0,1],
+        "post_processing": ["zernike", "white_noise"]
+    },
+    "sun": {
+        "type": "light",
+        "radiance": [2.3e6, 2.6e6, 2.6e6, 1.865e6, 5.645e6], //bands R(600-700nm), G(500-600nm), B(400-500nm), UV(300-400nm), NIR(700-1100nm)
+        "radius": 6.96e8,
+        "position": [ 0, 0, -1.49e11]
+    },
+    "zernike": {
+        "type": "post_processing",
+        "filter_type": "zernike",
+        "image_height": 1080,
+        "image_width": 1820,
+        "params": {
+            "fnum":2.2,
+            "pixel_pitch":2.2e-06,
+            "band_start":0.45e-6,
+            "band_end":0.90e-6,
+            "coeff": [0, 0, 0, 0.4625e-6, -0.0291e-6, 0.0222e-6, -0.0480e-6, 0.0764e-6, 0.0028e-6, -0.0022e-6, 0.0731e-6, -0.0034e-6, 0.0075e-6, -0.0040e-6]
+        }
+    },
+    "white_noise": {
+        "type": "post_processing",
+        "filter_type": "white_noise",
+        "image_height": 1944,
+        "image_width": 2592,
+        "params": {
+            "nsr":0.1
+        }
+    }
+}

@@ -1,0 +1,86 @@
+{
+    "options": {
+        "type": "options",
+        "background_color": [0.0, 0.0, 0.0, 0.0],
+        "output_folder": "../output/",
+        "output_format": "png",
+        "normalize_output": false
+    },
+    "linuss": {
+        "type": "model",
+        "filename": "/data/ams_cv/sgs_optix_models/linuss_modified.glb",
+        "t_matrix": [   0.6798266,  0.6218989,  0.3886869,4,
+                        -0.6218989,  0.7697629, -0.1438982,0,
+                        -0.3886869, -0.1438982,  0.9100636,0,
+                        0,0,0,1 ]
+    },
+    "nfov": {
+        "type": "camera",
+        "camera_type": "grayscale", //color, grayscale, infrared
+        "enabled": true,        
+        "image_width": 1920,        //in pixels
+        "image_height": 1080,       //in pixels
+        "focal_length": 0.07,       //in meters
+        "aperture": 0.02,           //in meters
+        "exposure_time": 250e-6,    //in seconds
+        "pixel_pitch": 2.2e-6,      //in meters
+        "well_depth": 6667,         //[e-]
+        "system_gain": 4.5,   //[DN/e-] if you have a 1/K gain [e-/DN] then you need to put the inverse. Make sure that (well_depth*system_gain) is close to the max value that can be represented by the definied bits
+        "quantum_efficiency": [0.51, 0.64, 0.58, 0.28, 0.16], //bands R(600-700nm), G(500-600nm), B(400-500nm), UV(300-400nm), NIR(700-1100nm)
+        "bits": 8,
+        "user_gain": 1,
+        "oversampling": 5,
+        "undistortion_k": [-0.87660, 0.79050, -0.47030],
+        "undistortion_p": [0.001152, 0.001223],
+        "distortion_k": [1.03066609, -1.23938090, 15.7324080],
+        "distortion_p": [-0.0032, -0.0034],
+        "t_matrix": [ 0.4749,-0.18555 , 0.86, 4,
+                     -0.7117,-0.65547,0.25 , 0,
+                      0.5166, -0.732,-0.444, 630,
+                      0.0, 0.0, 0.0, 1.0 ]
+        //"post_processing":["zernike"]
+    },
+    "sun": {
+        "type": "light",
+        "radiance": [2.3e6, 2.6e6, 2.6e6, 1.865e6, 5.645e6], //bands R(600-700nm), G(500-600nm), B(400-500nm), UV(300-400nm), NIR(700-1100nm)
+        "radius": 6.96e8,
+        "position": [ 0, 1.49e11, 0]
+    },
+    "defocus": {
+        "type": "post_processing",
+        "filter_type": "psf",
+        "image_height": 1944,
+        "image_width": 2592,
+        "params": {
+            "filename":"/data/ams_cv/gncoptix/psf/defocus.tif"
+        }
+    },
+    "zernike": {
+        "type": "post_processing",
+        "filter_type": "zernike",
+        "image_height": 1080,
+        "image_width": 1920,
+        "params": {
+            "fnum":2.2,
+            "pixel_pitch":2.2e-06,
+            "band_start":0.45e-6,
+            "band_end":0.90e-6,
+            "coeff": 
+            [0,             //Piston
+             0,             //Tilt-X
+             0,             //Tilt-Y
+             0.2611e-6,     //Defocus
+             -0.0067e-6,    //Oblique Astigmatism
+             0.0015e-6,     //Vertical Astigmatism
+             -0.2e-6,       //Vertical Coma
+             0.241e-6,      //Horizontal Coma
+             -0.0029e-6,    //Vertical trefoil
+             -0.0005e-6,    //Oblique trefoil
+             0.11e-6,       //Primary spherical
+             -0.0012e-6,    //Vertical secondary astigmatism
+             -0.0014e-6,    //Oblique secondary astigmatism
+             -0.0005e-6,    //Vertical quadrafoil
+             0]             //Oblique quadrafoil
+        }
+    }
+}
