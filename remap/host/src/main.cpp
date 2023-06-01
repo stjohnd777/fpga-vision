@@ -1,6 +1,6 @@
 #include "xcl2.hpp"
 #include "PLRemap.h"
-
+#include "myutils.h"
 
 #include <string>
 #include <chrono>
@@ -10,6 +10,7 @@
 #include <sstream>
 #include <tuple>
 #include <time.h>
+#include <chrono>
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/core.hpp>
@@ -35,8 +36,6 @@
 using namespace std;
 using namespace cv;
 
-
-
 using namespace lmc;
 int numberFrames =10;
 bool isCameraGaurd = false;
@@ -44,7 +43,6 @@ bool isWriteFile = true;
 int usbCameraId = 0;
 std::string imgSGS_2592x1944x8x1Path   = "data/sgs_2592x1944x8x1.png";
 std::string imgFLIR_2592x1944x16x1Path = "data/flir-2592x1944x16x1.png";
-
 
 
 int main(int arc, char** argv) {
@@ -83,67 +81,94 @@ int main(int arc, char** argv) {
 		cout << "***********************************************" << endl << endl << endl;
 		try {
 
-			CameraManager::BUFFER_COUNT = 10;
-			CameraManager::defaultPixelFormat = PixelFormatEnums::PixelFormat_Mono8;
-			CameraManager::LOGGING = false;
-
-
-			CameraManager::Init(PixelFormatEnums::PixelFormat_Mono8);
-			auto cameraCount =  CameraManager::GetCameraCount();
+			CameraManager::Init(PixelFormatEnums::PixelFormat_Mono8,2);
+			auto cameraCount = CameraManager::GetCameraCount();
 			cout << "Camera Count: " << cameraCount << endl;
 
 			for (auto i = 0; i < numberFrames; i++) {
 
-				for ( auto index = 0 ; index < cameraCount; index++){
+				auto res= SteroPair(0,1);
+				if ( res[0].isSuccess && res[1].isSuccess) {
+					cout << i << " : --------------------------------------" << endl;
+					ImagePtr img0 = res[0].payload;
+					cout << ">> [" << i << "," << 0 << "]" << img0->GetHeight() << "x" << img0->GetWidth() << "x" << img0->GetBitsPerPixel() << "@" << res[0].t << endl;
+					stringstream ss;
+					ss << i << "-FLIR-MONO8-CAMERA-" << res[0].t << "-" << 0 << ".png";
+					img0->Save(ss.str().c_str());
+					ImagePtr img1 = res[1].payload;
+					cout << ">> [" << i << "," << 1 << "]" << img1->GetHeight() << "x" << img1->GetWidth() << "x" << img1->GetBitsPerPixel() <<  "@" << res[0].t <<  endl;
+					stringstream ss2;
+					ss2 << i << "-FLIR-MONO8-CAMERA-" << res[1].t << "-" << 1 << ".png";
+					img1->Save(ss2.str().c_str());
+					cout << "DELTA:" << abs(res[0].t - res[1].t) << endl;
+					cout << i << " : --------------------------------------" << endl;
+				}
 
 
-					cout << i << ":" << index << " --------------------------------------" << endl;
-					GetImageResponse res =  CameraManager::GetImageFromCamera(index,PixelFormatEnums::PixelFormat_Mono8);
-
-					//FLIRCameraController::GetInstance(index)->GetImage(index,10*1000);
-
-					if (res.isSuccess) {
-						aquiredImages++;
-
-						ImagePtr img = res.payload;
-						cout << ">> capture:" << i <<
-								" >> index:" << index <<
-								" Image: " << img->GetHeight() << "x" << img->GetWidth() << "bbp" << img->GetBitsPerPixel() << endl;
-
-						stringstream ss;
-						ss << i << "-FLIR-MONO8-CAMERA-" << index << ".pgm";
-						img->Save(ss.str().c_str());
-						cout <<  " Saved Acquired Image to " << ss.str().c_str() <<  endl;
-
-//						Mat in = FLIRCameraController::ConvertToCVMat(img);
+//				for ( auto indexCamera = (unsigned int)0 ; indexCamera < cameraCount; indexCamera++){
+//
+//					cout << "capture: " << i << " camera: " << indexCamera << " --------------------------------------" << endl;
+//
+//					int max_capture_attempts = 10;
+//					int capture_attempts = 0;
+//					GetImageResponse res ;
+//					while( !res.isSuccess) {
+//						if ( capture_attempts) {
+//							cout <<  res.errorMessage << endl;
+//						}
+//					   res =  CameraManager::GetImageFromCamera(indexCamera,PixelFormatEnums::PixelFormat_Mono8);
+//					   capture_attempts ++;
+//					   if ( capture_attempts > max_capture_attempts){
+//						   cout << "Capture:" << i << "Giving Up in Camera:" << indexCamera << endl;
+//						   capture_attempts =0;
+//						   break;
+//					   }
+//					   cout << "missed capture: " << i << " camera: " << indexCamera << " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << endl;
+//					}
+//
+//
+//					if (res.isSuccess) {
+//
+//						aquiredImages++;
+//
+//						ImagePtr img = res.payload;
+//						cout << ">> capture:" << i <<
+//								" >> camera:" << indexCamera <<
+//								" Image: " << img->GetHeight() << "x" << img->GetWidth() << "bbp" << img->GetBitsPerPixel() << endl;
+//
+//						std::time_t t = std::time(0);
+//						stringstream ss;
+//						ss << i << "-FLIR-MONO8-CAMERA-" << t << "-" << indexCamera << ".png";
+//						img->Save(ss.str().c_str());
+//						cout <<  " Saved Acquired Image to " << ss.str().c_str() <<  endl;
+//
+//						Mat in = CameraManager::ConvertToCVMat(img);
 //						stringstream ss2;
-//						ss2 << i << "-MAT-MONO8-CAMERA-" << index << ".pgm";
+//						ss2 << i << "-MAT-MONO8-CAMERA-" << indexCamera << ".png";
 //						cv::imwrite(ss2.str(), in);
 //						cout << i << " Converted ImagePtr To cv::Mat:" <<  ss2.str() << endl;
 //
 //						cv::Mat remapOutR = plRemapMono8(in, map_x, map_y);
 //						cout << i << " >>> Success plremap mono8 image " << endl;
 //						stringstream ss3;
-//						ss3 << i<< "-REMAP-MONO8-CAMERA" << index << ".pgm";
+//						ss3 << i<< "-REMAP-MONO8-CAMERA" << indexCamera << ".png";
 //						imwrite(ss3.str(), remapOutR);
 //						cout << i << " Result Saved to File: " << ss3.str() << endl;
-
-					} else {
-						cout << "capture:" <<  i << "index:" << index <<  " Error .... Application Exception FLIR Camera" << endl;
-						cout <<  res.errorMessage << endl;
-					}
-
-					cout << i << ":" << index << " --------------------------------------" << endl;
-
-				}
+//
+//
+//					} else {
+//						cout << "capture:" <<  i << "index:" << indexCamera <<  " Error .... Application Exception FLIR Camera" << endl;
+//						cout <<  res.errorMessage << endl;
+//
+//					}
+//					cout << i << ":" << indexCamera << " --------------------------------------" << endl;
+//				}
 
 				cout << endl << endl ;
-				mysleep(2*1000);
+
 
 			}
             cout << ">>> We Acquired " << aquiredImages << endl;
-			CameraManager::GetInstance()->Clear(0);
-			CameraManager::GetInstance()->Clear(1);
 			cout << "SUCCESS !!!!!!!!!!!!!!!!!!!!!!!! " << endl;
 
 		} catch (std::exception & ex) {
@@ -182,7 +207,7 @@ int main(int arc, char** argv) {
 			int i =0;
 			while (true) {
 
-				GetImageResponse res = CameraManager::GetInstance()->GetImage(7000);
+				GetImageResponse res = CameraManager::GetImageFromCamera(0,PixelFormatEnums::PixelFormat_Mono8);// f, exposure)   ::GetInstance()->GetImage(7000);
 				ImagePtr img;
 				Mat cvmat;
 				if ( res.isSuccess){
