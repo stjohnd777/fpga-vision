@@ -16,5 +16,4 @@ void CreateRemapDefinitionFlipHorz(int rows, int cols, cv::Mat& map_x,
 		cv::Mat& map_y) ;
 
 // TODO : properties file for location mapX and mapY files
-std::tuple<cv::Mat, cv::Mat> GetRemapXYMapsFromFiles(int rows, int cols,
-		char* mapx = "data/mapx.out", char* mapy = "data/mapy.out") ;
+std::tuple<cv::Mat, cv::Mat> GetRemapXYMapsFromFiles(int rows, int cols, const char* mapx, const char* mapy ) ;

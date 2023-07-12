@@ -104,7 +104,6 @@ std::thread*  MyImageServer::Start() {
 				boost::asio::read_until(socket, request_buf, "\n");
 				std::string request = boost::asio::buffer_cast<const char *>(request_buf.data());
 
-
 				// Parse Request
 				std::cout << "Client Sent Request " << request << std::endl;
 				auto tokens = mysplit(request, "|");

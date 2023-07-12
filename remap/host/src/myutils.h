@@ -20,7 +20,6 @@ using namespace std;
 #include <opencv2/videoio/videoio.hpp>
 using namespace cv;
 
-#include "xcl2.hpp"
 
 #define OCL_CHECK(error, call)                                                                   \
     call;                                                                                        \

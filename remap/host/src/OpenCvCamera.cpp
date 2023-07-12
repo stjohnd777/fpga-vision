@@ -48,7 +48,7 @@ Mat OpenCvCamera::GetFrame() {
 	return frame;
 }
 
-cv::Mat OpenCvCamera::GetPreviousFrame(int depth) {
+cv::Mat OpenCvCamera::GetPreviousFrame(size_t depth) {
 
 	if (circular_buffer.size() > depth) {
 		return circular_buffer[depth];

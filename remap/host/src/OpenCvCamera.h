@@ -15,7 +15,7 @@ class OpenCvCamera {
 public:
 	OpenCvCamera(int cameraID, int bufferDepth = 10);
 	virtual cv::Mat GetFrame();
-	cv::Mat GetPreviousFrame(int depth = 0);
+	cv::Mat GetPreviousFrame(size_t depth = 0);
 	int getBufferedFrameDepth();
 	virtual ~OpenCvCamera();
 private:

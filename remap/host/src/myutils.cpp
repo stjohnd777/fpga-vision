@@ -1,13 +1,5 @@
 #include "myutils.h"
 
-//#define OCL_CHECK(error, call)                                                                   \
-//    call;                                                                                        \
-//    if (error != CL_SUCCESS) {                                                                   \
-//        printf("%s:%d Error calling " #call ", error code is: %d\n", __FILE__, __LINE__, error); \
-//        exit(EXIT_FAILURE);                                                                      \
-//    }
-
-#include "TimeMetric.h"
 #include "myutils.h"
 #include <sys/time.h>
 #include <string>
@@ -37,7 +29,7 @@ double getTimestamp() {
 
 
 cl::Device GetDevice(const char* match ) {
-	TimeMetrics::Start("GetDevice");
+
 	std::vector < cl::Device > devices;
 	cl::Device device;
 	std::vector < cl::Platform > platforms;
@@ -56,15 +48,13 @@ cl::Device GetDevice(const char* match ) {
 			}
 		}
 	}
-	TimeMetrics::Stop("GetDevice");
+
 	return device;
 }
 
 cl::Context GetContext(cl::Device& device) {
-	TimeMetrics::Start("Context");
 	cl_int err;
     OCL_CHECK(err, cl::Context context(device, NULL, NULL, NULL, &err));
-    TimeMetrics::Stop("Context");
 	return context;
 }
 
@@ -82,7 +72,7 @@ size_t ReadFile(const string fileName, char *buf) {
 
 
 cl::Kernel GetKernel(cl::Device& device, cl::Context& context, const string& xclbinFilename, const string& kernelName) {
-	TimeMetrics::Start("GetKernel");
+
 	cout << "GetKernel(device," << xclbinFilename << "," << kernelName << ")" << endl;
 	char* buf = nullptr;
 	//size_t nb = ReadFile(xclbinFilename, buf);
@@ -108,7 +98,7 @@ cl::Kernel GetKernel(cl::Device& device, cl::Context& context, const string& xcl
 	std::cout << "Found Program  : '" << kernelName << "'\n";
     OCL_CHECK(err, cl::Kernel krnl(program, kernelName.c_str(), &err));
 	std::cout << "Found Kernel  : '" << kernelName << "'\n";
-    TimeMetrics::Stop("GetKernel");
+
     cout << "Exit GetKernel()" << endl;
 	return krnl;
 }
